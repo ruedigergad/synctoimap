@@ -34,8 +34,8 @@ SyncToImapBase {
 
         _imapMessageSubject = subject
 
-        if (useBuiltInDialogs) {
-            _syncToImapProgressDialog.maxValue = 5
+        if (useDialogs) {
+            progressDialog.maxValue = 5
         }
 
         _syncToImap()
