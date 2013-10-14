@@ -98,7 +98,7 @@ int SyncToImap::setEnvironmentVariables() {
     QString qmfPluginsEnvVar = ownLibPathStr + "/qmf/lib/qmf/plugins5";
 
     if (! qmfPluginsEnvVar.isEmpty()) {
-        qDebug() << "Setting QMF_PLUGINS to:" << qmfPluginsEnvVar.toLatin1();
+        qDebug() << "Setting QMF_PLUGINS to:" << qmfPluginsEnvVar.toLocal8Bit();
         qDebug() << "setenv returned:" << setenv("QMF_PLUGINS", qmfPluginsEnvVar.toLocal8Bit().constData(), 1);
     }
 
