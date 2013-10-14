@@ -19,6 +19,7 @@
 
 #include "synctoimap.h"
 
+#include "envvarhelper.h"
 #include "filehelper.h"
 #include "imapaccounthelper.h"
 #include "imapaccountlistmodel.h"
@@ -43,34 +44,6 @@ SyncToImap::SyncToImap()
 {
 }
 
-int SyncToImap::getOwnLibPath() {
-#ifdef LINUX_DESKTOP
-    if (QFile::exists(ownPathStr + "/../lib/qmf/lib/qmf/plugins5/messageservices/libimap.so")) {
-        ownLibPathStr = ownPathStr + "/../lib";
-    } else if (QFile::exists(ownPathStr + "/lib/qmf/lib/qmf/plugins5/messageservices/libimap.so")) {
-        ownLibPathStr = ownPathStr + "/lib";
-    } else if (QFile::exists("lib/qmf/lib/qmf/plugins5/messageservices/libimap.so")) {
-        ownLibPathStr = "lib";
-    } else {
-        qErrnoWarning("Couldn't find own lib directory. Synchronization feature might not work.");
-        return -1;
-    }
-#endif
-
-    return 0;
-}
-
-int SyncToImap::getOwnPath() {
-#ifdef LINUX_DESKTOP
-    char ownPath[256];
-    int ownPathLength = readlink("/proc/self/cwd", ownPath, 256);
-    ownPathStr = QString::fromUtf8(ownPath, ownPathLength);
-    qDebug() << "Found own path:" << ownPathStr;
-#endif
-
-    return 0;
-}
-
 int SyncToImap::init() {
     qmlRegisterType<FileHelper>("SyncToImap", 1, 0, "FileHelper");
     qmlRegisterType<ImapAccountHelper>("SyncToImap", 1, 0, "ImapAccountHelper");
@@ -87,8 +60,9 @@ int SyncToImap::init() {
 int SyncToImap::setEnvironmentVariables() {
     qDebug("Setting SyncToImap environment variables...");
 
-    getOwnPath();
-    if (getOwnLibPath() != 0) {
+    ownPathStr = EnvVarHelper::getOwnPath();
+    ownLibPathStr = EnvVarHelper::getOwnLibPath(ownPathStr);
+    if (ownLibPathStr.isEmpty()) {
         qErrnoWarning("getOwnLibPath returned non zero value. Not setting up QMF environment variables.");
         return -1;
     }
@@ -98,17 +72,11 @@ int SyncToImap::setEnvironmentVariables() {
     QString qmfPluginsEnvVar = ownLibPathStr + "/qmf/lib/qmf/plugins5";
 
     if (! qmfPluginsEnvVar.isEmpty()) {
-        qDebug() << "Setting QMF_PLUGINS to:" << qmfPluginsEnvVar.toLocal8Bit();
-        qDebug() << "setenv returned:" << setenv("QMF_PLUGINS", qmfPluginsEnvVar.toLocal8Bit().constData(), 1);
+        EnvVarHelper::setEnvironmentVariable("QMF_PLUGINS", qmfPluginsEnvVar);
     }
 
     if (! libDirPath.isEmpty()) {
-        char *ldLibraryPath = getenv("LD_LIBRARY_PATH");
-        qDebug() << "Got LD_LIBRARY_PATH:" << ldLibraryPath;
-
-        libDirPath = QString(ldLibraryPath) + ":" + libDirPath;
-        qDebug() << "Setting new LD_LIBRARY_PATH:" << libDirPath;
-        qDebug() << "setenv returned:" << setenv("LD_LIBRARY_PATH", libDirPath.toLocal8Bit().constData(), 1);
+        EnvVarHelper::appendToEnvironmentVariable("LD_LIBRARY_PATH", libDirPath);
     }
 #endif
 

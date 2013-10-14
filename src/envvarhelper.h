@@ -17,29 +17,22 @@
  *  along with SyncToImap.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef SYNCTOIMAP_H
-#define SYNCTOIMAP_H
+#ifndef ENVVARHELPER_H
+#define ENVVARHELPER_H
 
 #include <QProcess>
 #include <QString>
 
-class SyncToImap
+class EnvVarHelper
 {
 public:
-    static int init();
-    static int shutdown();
+    static int appendToEnvironmentVariable(QString var, QString value);
+    static QString getOwnLibPath(QString ownPath);
+    static QString getOwnPath();
+    static int setEnvironmentVariable(QString var, QString value);
 
 private:
-    SyncToImap();
-
-    static int setEnvironmentVariables();
-    static int startMessageServer();
-    static int stopMessageServer();
-
-    static QString ownLibPathStr;
-    static QString ownPathStr;
-    static QProcess *messageServerProcess;
-    static bool messageServerStarted;
+    EnvVarHelper();
 };
 
-#endif // SYNCTOIMAP_H
+#endif // ENVVARHELPER_H
