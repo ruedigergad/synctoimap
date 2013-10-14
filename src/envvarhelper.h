@@ -27,7 +27,7 @@ class EnvVarHelper
 {
 public:
     static int appendToEnvironmentVariable(QString var, QString value);
-    static QString getOwnLibPath(QString ownPath);
+    static QString getOwnLibPath(QString ownPath = getOwnPath());
     static QString getOwnPath();
     static int setEnvironmentVariable(QString var, QString value);
 
