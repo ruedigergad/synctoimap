@@ -20,10 +20,18 @@
 #include "imapstorage.h"
 #include <QDebug>
 #include <QDir>
+
+#ifdef QT5_BUILD
+#include <qmfclient5/qmaildisconnected.h>
+#include <qmfclient5/qmailfolderkey.h>
+#include <qmfclient5/qmailid.h>
+#include <qmfclient5/qmailstore.h>
+#else
 #include <qmfclient/qmaildisconnected.h>
 #include <qmfclient/qmailfolderkey.h>
 #include <qmfclient/qmailid.h>
 #include <qmfclient/qmailstore.h>
+#endif
 
 ImapStorage::ImapStorage(QObject *parent) :
     QObject(parent)

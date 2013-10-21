@@ -22,7 +22,12 @@
 
 #include <QObject>
 #include <QSortFilterProxyModel>
+
+#ifdef QT5_BUILD
+#include <qmfclient5/qmailaccountlistmodel.h>
+#else
 #include <qmfclient/qmailaccountlistmodel.h>
+#endif
 
 class ImapAccountListModel : public QSortFilterProxyModel
 {

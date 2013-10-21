@@ -20,10 +20,18 @@
 #include "imapaccounthelper.h"
 #include <QDebug>
 #include <QSettings>
+
+#ifdef QT5_BUILD
+#include <qmfclient5/qmailaccount.h>
+#include <qmfclient5/qmailstore.h>
+#include <qmfclient5/qmailnamespace.h>
+#include <qmfclient5/qmailpluginmanager.h>
+#else
 #include <qmfclient/qmailaccount.h>
 #include <qmfclient/qmailstore.h>
 #include <qmfclient/qmailnamespace.h>
 #include <qmfclient/qmailpluginmanager.h>
+#endif
 
 ImapAccountHelper::ImapAccountHelper(QObject *parent) :
     QObject(parent)

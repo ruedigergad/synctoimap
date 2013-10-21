@@ -21,8 +21,14 @@
 #define IMAPSTORAGE_H
 
 #include <QObject>
+
+#ifdef QT5_BUILD
+#include <qmfclient5/qmailaccount.h>
+#include <qmfclient5/qmailserviceaction.h>
+#else
 #include <qmfclient/qmailaccount.h>
 #include <qmfclient/qmailserviceaction.h>
+#endif
 
 class ImapStorage : public QObject
 {

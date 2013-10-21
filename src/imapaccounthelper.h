@@ -21,7 +21,12 @@
 #define IMAPACCOUNTHELPER_H
 
 #include <QObject>
+
+#ifdef QT5_BUILD
+#include <qmfclient5/qmailaccountconfiguration.h>
+#else
 #include <qmfclient/qmailaccountconfiguration.h>
+#endif
 
 class ImapAccountHelper : public QObject
 {
