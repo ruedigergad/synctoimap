@@ -66,8 +66,10 @@ QString EnvVarHelper::getOwnPath() {
 
 #ifdef LINUX_DESKTOP
     char ownPath[256];
-    int ownPathLength = readlink("/proc/self/cwd", ownPath, 256);
+    int ownPathLength = readlink("/proc/self/exe", ownPath, 256);
     ownPathStr = QString::fromLocal8Bit(ownPath, ownPathLength);
+    int lastIndex = ownPathStr.lastIndexOf("/");
+    ownPathStr.truncate(lastIndex);
     qDebug() << "Found own path:" << ownPathStr;
 #endif
 
